@@ -2,8 +2,8 @@
 #include <vector>
 #include <algorithm>
 #include <numeric>
-
-int main(){
+/*
+void taskOne(){
     std::string line;
     std::vector<int> joltage;
     while(std::getline(std::cin, line)){  
@@ -32,5 +32,47 @@ int main(){
     std::cout << std::endl;
     std::cout << "accumulate:\n";
     std::cout << std::accumulate( joltage.begin(), joltage.end(), 0 ) << '\n';
+}
+
+
+int main(){
+    taskOne();
+    return 0;
+}
+*/
+
+std::string maxJoltage(const std::string& bank, int n) {
+    int k = bank.size();
+    int toRemove = k - n;   // how many digits we are allowed to discard
+    std::vector<char> st;        // acts like a stack
+    st.reserve(k);
+
+    for (char c : bank) {
+        // Remove smaller digits when possible
+        while (!st.empty() && toRemove > 0 && st.back() < c) {
+            st.pop_back();
+            toRemove--;
+        }
+        st.push_back(c);
+    }
+
+    // If still need to remove digits, remove from end
+    while (toRemove > 0) {
+        st.pop_back();
+        toRemove--;
+    }
+
+    // Build result string of exactly n digits
+    return std::string(st.begin(), st.begin() + n);
+}
+
+int main() {
+    int n=12;
+    std::string line;
+    std::vector<long long> joltage;
+    while(std::getline(std::cin, line)){  
+        joltage.push_back(std::stoll(maxJoltage(line,n)));
+    }
+    std::cout << std::accumulate( joltage.begin(), joltage.end(), 0LL ) << '\n';
     return 0;
 }
