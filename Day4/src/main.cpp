@@ -34,7 +34,7 @@ forkliftSheet::forkliftSheet() {
 
 void forkliftSheet::readLine(std::string line) {
   while (line.size() < (size_t)numCol)
-    line += ' ';
+    line += '.';
   for (int i = 0; i < numCol; i++) {
     sheet.push_back(line[i]);
   }
@@ -111,12 +111,12 @@ int main() {
   int sum = 0;
 
   flS->markAccessableRolls();
-  std::cout << *flS << std::endl;
+  // std::cout << *flS << std::endl;
   // flS->removeAccRolls();
   // std::cout << *flS;
   while (flS->getAccRolls() > 0) {
     sum += flS->getAccRolls();
-    std::cout << *flS;
+    // std::cout << *flS;
     flS->removeAccRolls();
     flS->markAccessableRolls();
   }
