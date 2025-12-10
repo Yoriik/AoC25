@@ -73,10 +73,22 @@ std::istream& operator>>(std::istream& is, Manifold& mani){
 }
 
 
-int main(){
+int main(int argc, char* argv){
+    if (argc != 2) {
+        std::cout << "Expecting int as part of day." << std::endl;
+        return -1;
+    }
+    if (*argv[1] == '1') {
     Manifold* m = new Manifold();
     std::cin >> *m;
 
     std::cout << "Number of Splits: " << m->propagateAndCountSplits() << std::endl;
+    }
+    if (*argv[1] == '2') {
+    Manifold* m = new Manifold();
+    std::cin >> *m;
+
+    std::cout << "Number of Splits: " << m->propagateAndCountSplits() << std::endl;
+    }
     return 0;
 }
