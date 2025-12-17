@@ -378,6 +378,36 @@ int main(int argc, char *argv[]) {
 
     auto results = process_columns_right_to_left(M, operators);
 
+
+    for (auto v : results)
+      std::cout << v << " ";
+    std::cout << "\n";
+
+    long long r = results.size() / operators2.size();
+    //std::reverse(operators2.begin(),operators2.end());
+    long long multTerm = 1, addTerm = 0, sum = 0;
+    for (long long i = 0; i < operators2.size(); i++) {
+      multTerm = 1, addTerm = 0;
+      for (long long j = r*i; j < r*i+r; j++) {
+        if (operators2[i] == operation::ADD) {
+          std::cout << "adding: " << results[j] << std::endl;
+          addTerm += results[j];
+        }
+        if (operators2[i] == operation::MULT) {
+          std::cout << "multing: " << results[j] << std::endl;
+          multTerm *= results[j];
+        }
+      }
+      if (operators2[i] == operation::ADD) {
+        std::cout << "term for grand total " << addTerm << std::endl;
+        sum += addTerm;
+      }
+      if (operators2[i] == operation::MULT) {
+        std::cout << "term for grand total " << multTerm << std::endl;
+        sum += multTerm;
+      }
+      std::cout << "grand total after op " << i << " " << sum << std::endl;
+    }
     for (auto v : operators2) {
       if (v == operation::ADD)
         std::cout << '+';
@@ -385,36 +415,6 @@ int main(int argc, char *argv[]) {
         std::cout << '*';
     }
     std::cout << "\n";
-
-    for (auto v : results)
-      std::cout << v << " ";
-    std::cout << "\n";
-
-    long long r = results.size() / operators2.size();
-    long long multTerm = 1, addTerm = 0, sum = 0;
-    for (long long i = 0; i < operators2.size(); i++) {
-      multTerm = 1, addTerm = 0;
-      for (long long j = r * (i + 1) - 1; j >= i * r; --j) {
-        if (operators2[i] == operation::MULT) {
-          std::cout << "adding: " << results[i + j] << std::endl;
-          addTerm += results[i + j];
-        }
-        if (operators2[i] == operation::ADD) {
-          std::cout << "multing: " << results[i + j] << std::endl;
-          multTerm *= results[i + j];
-        }
-      }
-      if (operators2[i] == operation::MULT) {
-        std::cout << "term for grand total " << addTerm << std::endl;
-        sum += addTerm;
-      }
-      if (operators2[i] == operation::ADD) {
-        std::cout << "term for grand total " << multTerm << std::endl;
-        sum += multTerm;
-      }
-      std::cout << "grand total after op " << i << " " << sum << std::endl;
-    }
-
     std::cout << sum << '\n';
     return 0;
   }

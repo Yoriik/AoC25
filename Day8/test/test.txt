@@ -1,0 +1,40 @@
+162 817 812 -> new circuit with 2 elements 162 817 812 and 425 690 689
+425 690 689
+316.902
+
+162 817 812 -> add to first circuit, now 3 elements 162 817 812, 425 690 689 and 431 825 988
+431 825 988
+321.56
+
+906 360 560 -> new circuit with 2 elements 906 360 560 and 805 96 715
+805 96 715
+322.369
+
+431 825 988 -> already included, nothing changed
+425 690 689
+328.119
+
+862 61 35   -> new circuit with 2 elements 862 61 35 and 984 92 344
+984 92 344
+333.656
+
+52 470 668  -> new circuit with 2 elements 52 470 668 and 117 168 530
+117 168 530
+338.339
+
+819 987 18  -> new circuit with 2 elements 819 987 18 and 941 993 340
+941 993 340
+344.389
+
+906 360 560 -> add to second circuit, now 3 elements 906 360 560, 805 96 715 and 739 650 466
+739 650 466
+347.599
+
+346 949 466 -> add to first circuit, now 4 elements 162 817 812, 425 690 689, 431 825 988 and 346 949 466
+425 690 689
+350.786
+
+906 360 560 -> join circuits 2 and 3 for circuit of 5 elements
+984 92 344
+352.936
+
