@@ -145,6 +145,8 @@ public:
   Circuit& operator=(const Circuit&)=default;
   Circuit& operator=(Circuit&&)=default;
 
+  //bool operator==(const Circuit&);
+
   int size(){return junctionList.size();}
   bool addNode(Node&);
   bool contains(Junction&)const;
@@ -221,6 +223,7 @@ public:
   void sortCircuits();
   long long multLargestCircuits(int)const;
   void combineCircuits();
+  long long connectCircuits(long double);
 
   friend std::istream& operator>>(std::istream&, Network&);
   friend std::ostream& operator<<(std::ostream&, Network&);
@@ -247,10 +250,7 @@ void Network::findShortestPath(){
 
 void Network::sortDistances(int num){
   sort(distances.begin(), distances.end());
-  // Source - https://stackoverflow.com/a
-  // Posted by Mark Ransom, modified by community. See post 'Timeline' for change history
-  // Retrieved 2025-12-16, License - CC BY-SA 3.0
-  // std::vector<decltype(this->distances)::value_type>(this->distances.begin()+num, this->distances.end()).swap(this->distances);
+  
   distances.erase(distances.begin()+num,distances.end());
   return;
 }
@@ -316,21 +316,54 @@ long long Network::multLargestCircuits(int num)const{
 }
 
 void Network::combineCircuits(){
-  for(size_t i = 0; i < circuits.size(); i++){
-    for(size_t j = i+1; j < circuits.size(); j++){
-      if(this->circuits[i].sharesJunctionWith(this->circuits[j])){
-        Circuit circ = std::move(circuits[i]);
-        Circuit circ2(circuits[j]);
-        for(auto v : circ2.junctionList){
-          if(!circ.contains(v))
-            circ.junctionList.push_back(v);
+  bool merged = true;
+  while (merged) {
+    merged = false;
+    for (size_t i = 0; i < circuits.size() && !merged; ++i) {
+      for (size_t j = i + 1; j < circuits.size(); ++j) {
+        if (circuits[i].sharesJunctionWith(circuits[j])) {
+          for (auto& v : circuits[j].junctionList) {
+            if (!circuits[i].contains(v))
+              circuits[i].junctionList.push_back(v);
+          }
+          circuits.erase(circuits.begin() + j);
+          merged = true;
+          break;
         }
-        //circuits.erase();
-        circuits.erase(std::next(circuits.begin()+j));
-        circuits.push_back(circ);
       }
     }
   }
+}
+
+long long Network::connectCircuits(long double result){
+  if(circuits.size() == 1) return result;
+  Node n;
+  n.distance = 0.0;
+  size_t tmp;
+  for(size_t c = 0; c <= circuits.size(); c++){
+    for(size_t d = c+1; d <= circuits.size(); d++){
+      for(auto j1 : circuits[c].junctionList){
+        for(auto j2 : circuits[d].junctionList){
+          long double dx = (long double)j1.X - (long double)j2.X;
+          long double dy = (long double)j1.Y - (long double)j2.Y;
+          long double dz = (long double)j1.Z - (long double)j2.Z;
+
+          long double distance = std::sqrt(dx*dx + dy*dy + dz*dz);
+          if(n.distance == 0.0 || n.distance > distance){
+            tmp = c;
+            n.source = j1;
+            n.sink = j2;
+            n.distance = distance;
+          }
+        }
+      }
+    }
+  }
+  //auto it = std::find(circuits.begin(), circuits.end(), *tmp);
+  //auto position = std::distance(circuits.begin(), it) + 1;
+  circuits[tmp].addNode(n);
+  combineCircuits();
+  return connectCircuits(n.source.X*n.sink.X);
 }
 
 std::istream& operator>>(std::istream& is, Network& nw){
@@ -374,6 +407,15 @@ int main(int argc, char *argv[]) {
   }
   if (*argv[1] == '2') {
     
+    Network n;
+    std::cin >> n;
+    n.findShortestPath();
+    n.sortDistances(10);
+    std::cout << n << std::endl;
+    n.build(10);
+    n.sortCircuits();
+    std::cout << n.multLargestCircuits(3) << std::endl;
+    std::cout << n.connectCircuits(0) << std::endl;
   }
   return 0;
 }
